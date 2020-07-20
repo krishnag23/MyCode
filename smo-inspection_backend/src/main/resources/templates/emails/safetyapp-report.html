@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+	<head>
+		<title>Safety Report e-Mail</title>
+		<meta name="charset" content="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body>
+		<div class="container">
+			<div>
+				<h1 style="font-weight: bold;">Workplace Safety</h1>
+				<h2>Daily status report - ${.now?string('E, dd MMM yyyy')}
+				</h2>
+			</div>
+
+			<table style="width:100%">
+				<tr>
+					<td style="vertical-align:top;padding-right: 10px;">
+						<h2>Level 27</h2>
+					</td>
+					<td style="vertical-align:top">
+						<table>
+							<tr>
+								<td style="padding: 0 10px 10px 0">
+									<div>
+										<p style="font-weight: bold;font-size: 15px;">Morning Report</p>
+										<#if morning27?has_content>
+										<p>Reported by: ${morning27.user_id}</p>
+										<p>Submited on: ${morning27.submittedDate} hrs</p>
+										<#else>
+										<p style="color: #f7b500;font-size: 30px;font-weight: bold;">Not Submitted</p>
+										</#if>                 
+
+									</div>
+								</td>
+								<#if morning27?has_content>
+								<td style="vertical-align:top;padding: 10px">
+									Unresolved cases:${morning27.unresolved_cases}
+								</td>
+								</#if>   
+							</tr>
+							<tr>
+
+								<td style="padding: 0 10px 10px 0">
+									<div>
+										<p style="font-weight: bold;font-size: 15px;">Afternoon Report</p>
+										<#if afternoon27?has_content>
+										<p>Reported by: ${afternoon27.user_id}</p>
+										<p>Submited on: ${afternoon27.submittedDate} hrs</p>
+										<#else>
+										<p style="color: #f7b500;font-size: 30px;font-weight:bold">Not Submitted</p>
+										</#if>
+									</div>
+								</td>
+								<#if afternoon27?has_content>
+								<td style="vertical-align:top">
+									Unresolved cases:${afternoon27.unresolved_cases}
+								</td>
+								</#if>
+							</tr>
+						</table>
+
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align:top;padding-right: 10px;">
+						<h2>Level 28</h2>
+					</td>
+					<td>
+						<table>
+							<tr>
+								<td style="padding: 0 10px 10px 0">
+									<div>
+										<p style="font-weight: bold;font-size: 15px;">Morning Report</p>
+
+										<#if morning28?has_content>
+										<p>Reported by: ${morning28.user_id}</p>
+										<p>Submited on: ${morning28.submittedDate} hrs</p>	
+										<#else>
+										<p style="color: #f7b500;font-size: 30px;font-weight: bold;">Not Submitted</p>
+										</#if>   
+
+									</div>
+								</td>
+								<#if morning28?has_content>
+								<td style="vertical-align:top">
+									Unresolved cases:${morning28.unresolved_cases}
+								</td>
+								</#if>
+							</tr>
+							<tr>
+
+								<td   style="padding: 0 10px 10px 0">
+									<div>
+										<p style="font-weight: bold;font-size: 15px;">Afternoon Report</p>
+										<#if afternoon28?has_content>
+										<p>Reported by: ${afternoon28.user_id}</p>
+										<p>Submited on: ${afternoon28.submittedDate} hrs</p>
+										<#else>
+										<p style="color: #f7b500;font-size: 30px;font-weight:bold">Not Submitted</p>
+										</#if>
+									</div>
+								</td>
+								<#if afternoon28?has_content>
+								<td style="vertical-align:top">
+									Unresolved cases:${afternoon28.unresolved_cases}
+								</td>
+								</#if>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+		</div>
+	</body>
+</html>
