@@ -1,0 +1,142 @@
+<div class="row">
+  <div class="col-md-4"></div>
+  <form [formGroup]="formData" (ngSubmit)="onSubmit()">
+
+    <mat-toolbar style="height: 94px;padding: 40px; background-color: white;">
+      <div style="float: left; width:20% ;">
+        <span style="font-weight: bolder;font-size: 30px;" class="material-icons" [routerLink]="['/calendar']"
+          [queryParams]="{level: level}">keyboard_backspace</span>
+      </div>
+    </mat-toolbar>
+    <div style="padding-left: 40px;padding-right: 40px;">
+      <!-- Safety Lavel-->
+      <div class="level">
+        <p>Level {{ level }}<br>
+          {{date | date:'EEEE, d MMM y'}}
+      </div>
+      <div class="Report" *ngIf="hasAfternoon">
+        <p>Afternoon Report</p>
+      </div>
+      <div class="Report" *ngIf="hasMorning">
+        <p>Morning Report</p>
+      </div>
+      <div class="Reported-by">
+        <p>Reported by: {{ userData.name }}</p>
+      </div>
+      <hr>
+
+      <div class="Section">
+        <p>Section {{ counter + 1 }} of {{ numbarOfQuestion }}</p>
+      </div>
+      <div class="QuestionHeader">
+        <p>{{ mainHeading }}</p>
+      </div>
+      <div *ngFor="let subHeadingObj of questionSubHeading; let indexOfSubHeading=index">
+        <h2 *ngIf="hasMorning && subHeadingObj.hasMorning">{{ subHeadingObj.subHeading }}</h2>
+        <h2 *ngIf="hasAfternoon && subHeadingObj.hasAfternoon">{{ subHeadingObj.subHeading }}</h2>
+
+        <div *ngFor="let QuestionObj of subHeadingObj.questionMaster; let indexOfQuestion=index">
+          <h3 *ngIf="hasMorning && QuestionObj.hasMorning">{{ QuestionObj.question }}</h3>
+          <h3 *ngIf="hasAfternoon && QuestionObj.hasAfternoon">{{ QuestionObj.question }}</h3>
+          <!-- yes,no,na options -->
+          <div *ngIf="hasMorning && QuestionObj.hasMorning">
+            <mat-radio-group formControlName="reply">
+              <mat-radio-button color="primary" *ngFor="let replyOptionObj of QuestionObj.replyOption;"
+                [value]="replyOptionObj" (change)="onNoClick(QuestionObj.id,replyOptionObj)"
+                (click)="onFormChange(QuestionObj.id,replyOptionObj,subHeadingObj.mainHeadingId,QuestionObj.subHeadingId)">
+                {{ replyOptionObj }}</mat-radio-button>
+            </mat-radio-group>
+            <mat-icon style=" float: right;" color="primary" class="material-icons"
+              (click)="openDialog(QuestionObj.description)">info</mat-icon>
+          </div>
+          <div *ngIf="hasAfternoon && QuestionObj.hasAfternoon">
+            <mat-radio-group formControlName="reply">
+              <mat-radio-button color="primary" *ngFor="let replyOptionObj of QuestionObj.replyOption;"
+                [value]="replyOptionObj" (change)="onNoClick(QuestionObj.id,replyOptionObj)"
+                (click)="onFormChange(QuestionObj.id,replyOptionObj,subHeadingObj.mainHeadingId,QuestionObj.subHeadingId)">
+                {{ replyOptionObj }}</mat-radio-button>
+            </mat-radio-group>
+            <mat-icon style=" float: right;" color="primary" class="material-icons"
+              (click)="openDialog(QuestionObj.description)">info</mat-icon>
+          </div>
+
+          <!--No Option-->
+
+          <div *ngIf="indexQuestion.indexOf(QuestionObj.id) !== -1">
+            <mat-form-field appearance="fill">
+              <input matInput placeholder="Unsafe act/action.." required autocomplete="off"
+                (focusout)="onNoSetData($event,QuestionObj.id, 'action')">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <input matInput placeholder="Action required.." required autocomplete="off"
+                (focusout)="onNoSetData($event,QuestionObj.id, 'actionReq')">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Person in charge</mat-label>
+              <mat-select (selectionChange)="changePerson($event, QuestionObj.id)">
+                <mat-option *ngFor="let masterUserObj of masterUsers;" [value]=" masterUserObj.emaiId">
+                  {{ masterUserObj.userName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p>Has this issue been resolved?</p>
+            <div class="container">
+              <div>
+                <mat-radio-group>
+                  <mat-radio-button  color="primary" value="YES"
+                    (click)="issueResolved(QuestionObj.id)">Yes
+                  </mat-radio-button>
+                  <mat-radio-button  color="primary" value="NO"
+                  (click)="issueNotResolved(QuestionObj.id)">No
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+
+            <p>
+              <mat-form-field appearance="fill" *ngIf="resolve && QuestionObj.id ==resolveNo">
+                <mat-label>Date Of Action completion</mat-label>
+                <input matInput [matDatepicker]="dp3" [max]="todaysDate"
+                  (dateChange)="issueResolvedOrNot($event,QuestionObj.id)" disabled>
+                <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="fill" *ngIf="notResolve && QuestionObj.id ==notResolveNo">
+                <mat-label>Target completion date</mat-label>
+                <input matInput [matDatepicker]="dp3" [min]="todaysDate"
+                  (dateChange)="issueResolvedOrNot($event,QuestionObj.id)" disabled>
+                <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+              </mat-form-field>
+            </p>
+
+          </div>
+        </div>
+        <br>
+      </div>
+    </div>
+
+    <div *ngIf="nextButton" (click)="showToasterWarning()" style="background-color: #B2DEFE;width: 100%;
+      height: 50px;color:white;">
+      <p style=" text-align: center;
+    line-height: 50px;">Next {{ counter + 1 }}/{{ numbarOfQuestion }}</p>
+    </div>
+
+    <div *ngIf="enableNext" (click)="onClick()" style="background-color: #0091ff;width: 100%;
+    height: 50px;color:white;">
+      <p style=" text-align: center;
+  line-height: 50px;">Next {{ counter + 1 }}/{{ numbarOfQuestion }}</p>
+    </div>
+
+    <div *ngIf="submitButton" (click)="showToasterWarning()" style="background-color: #B2DEFE;width: 100%;
+  height: 50px;color:white;">
+      <p style=" text-align: center;
+line-height: 50px;">Submit</p>
+    </div>
+    <button mat-raised-button *ngIf="enableSubmit" style="background-color: #0091ff;width: 100%;
+      height: 50px;color:white;">Submit</button>
+  </form>
+  <div class="col-md-4"></div>
+</div>

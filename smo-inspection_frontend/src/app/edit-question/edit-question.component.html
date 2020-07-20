@@ -1,0 +1,119 @@
+<div class="row">
+  <div class="col-md-4"></div>
+  <form [formGroup]="formData" (ngSubmit)="onSubmit()">
+    <mat-toolbar style="height: 94px;padding: 40px; background-color: white;">
+      <div style="float: left; width:20% ;">
+        <span style="font-weight: bolder;font-size: 30px;" class="material-icons" [routerLink]="['/calendar']"
+          [queryParams]="{level: level}">keyboard_backspace</span>
+      </div>
+    </mat-toolbar>
+    <div style="padding-left: 40px;padding-right: 40px;">
+      <div class="level">
+        <p>Level {{ level }}<br>
+          {{date | date:'EEEE, d MMM y'}}
+        </p>
+      </div>
+      <div class="Afternoon-Report">
+        <p>{{ reportType }} Report</p>
+      </div>
+      <div class="Reported-by">
+        <p>Reported by: {{ reportReporter }}</p>
+      </div>
+      <hr>
+      <!-- Safety Lavel-->
+      <!-- <app-safetylevel></app-safetylevel> -->
+      <div class="Section">
+        <p>Section {{ section + 1 }} of {{ numbarOfSection }}</p>
+      </div>
+      <div class="QuestionHeader">
+        <p>{{ mainHeading }}</p>
+      </div>
+
+      <div *ngFor="let subHeading of questionSubHeading; let indexOfSubHeading=index">
+        <h2 *ngIf="isMorningReport && subHeading.hasMorning">{{ subHeading.subHeading }}</h2>
+        <h2 *ngIf="isAfternoonReport && subHeading.hasAfternoon">{{ subHeading.subHeading }}</h2>
+        <!-- <h2 >{{ subHeading.subHeading }}</h2> -->
+        <input type="hidden" [(ngModel)]="subHeading.mainHeadingId" formControlName="mainHeadingId">
+        <input type="hidden" [(ngModel)]="subHeading.id" formControlName="subHeadingId">
+        <input type="hidden" [(ngModel)]="subHeading.hasMorning" formControlName="hasMorning">
+        <input type="hidden" [(ngModel)]="subHeading.hasAfternoon" formControlName="hasAfternoon">
+        <div *ngFor="let Question of subHeading.questionMaster">
+
+          <h3 #quesId [attr.data-question-id]="Question.id">{{ Question.question }}</h3>
+
+          <mat-radio-group formControlName="reply" disabled>
+            <mat-radio-button value="YES" [checked]="(Question.answerDetaiils.reply === 'YES')">YES
+            </mat-radio-button>
+            <mat-radio-button value="NO" [checked]="(Question.answerDetaiils.reply === 'NO')">No
+            </mat-radio-button>
+            <mat-radio-button value="N/A" [checked]="(Question.answerDetaiils.reply === 'N/A')">N/A
+            </mat-radio-button>
+          </mat-radio-group>
+          <!--No Option-->
+
+          <div *ngIf="(Question.answerDetaiils.reply=='NO')">
+            <mat-form-field appearance="fill">
+              <input matInput placeholder="{{ Question.answerDetaiils.unsafeAction }}" formControlName="unsafeAction"
+                readonly>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="fill">
+              <input matInput placeholder="{{ Question.answerDetaiils.actionRequired }}"
+                formControlName="actionRequired" readonly>
+            </mat-form-field>
+            <br>
+            <div *ngFor="let masterUserObj of masterUsers;">
+              <mat-form-field appearance="fill" *ngIf="masterUserObj.emaiId === Question.answerDetaiils.personInCharge">
+                <!-- <mat-label>Person in charge</mat-label> -->
+                <!-- <mat-select formControlName="personInCharge" [(ngModel)]="Question.answerDetaiils.personInCharge" [disabled]="true">
+                <mat-option *ngFor="let masterUserObj of masterUsers;" [value]=" masterUserObj.emaiId"> {{ masterUserObj.userName }} </mat-option>
+              </mat-select> -->
+                <input matInput placeholder="{{masterUserObj.userName}}" formControlName="personInCharge" readonly>
+              </mat-form-field>
+            </div>
+            <p>Has this issue been resolved?</p>
+
+            <div class="container">
+              <div>
+                <mat-radio-group [disabled]="emailId !=Question.answerDetaiils.personInCharge">
+                  <mat-radio-button value="Yes" color="primary"
+                    [checked]="!(Question.answerDetaiils.dateOfActionCompleted == '')" (click)="issueResolved()">Yes
+                  </mat-radio-button>
+                  <mat-radio-button value="NO" color="primary"
+                    [checked]="!(Question.answerDetaiils.targetCompletionDate == '')" (click)="issueNotResolved()">No
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            <p>
+              <mat-form-field appearance="fill" *ngIf="!(Question.answerDetaiils.dateOfActionCompleted == '')">
+                <mat-label>{{ Question.answerDetaiils.dateOfActionCompleted | date}}</mat-label>
+                <input matInput [matDatepicker]="dp3" (dateChange)="issueResolvedOrNot($event,Question.id)" disabled>
+                <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                <mat-datepicker #dp3 [disabled]="emailId !=Question.answerDetaiils.personInCharge "></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="fill" *ngIf="!(Question.answerDetaiils.targetCompletionDate == '')">
+                <mat-label>{{Question.answerDetaiils.targetCompletionDate | date}}</mat-label>
+                <input matInput [matDatepicker]="dp3" (dateChange)="issueResolvedOrNot($event,Question.id)" disabled>
+                <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                <mat-datepicker #dp3 [disabled]="emailId !=Question.answerDetaiils.personInCharge "></mat-datepicker>
+              </mat-form-field>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div>
+    </div>
+    <div *ngIf="nextButton" (click)="onClick()"
+      style="background-color: #B2DEFE;width: 100%; height: 50px;color:white;">
+      <p style=" text-align: center; line-height: 50px;">Next {{ section + 1 }}/{{ numbarOfSection }}</p>
+    </div>
+    <button mat-raised-button *ngIf="submitButton"
+      style="background-color: #0091ff;width: 100%; height: 50px;color:white;">Update</button>
+    <div *ngIf="!enableSubmit && !nextButton" style="background-color: #B2DEFE;width: 100%; height: 50px;color:white;">
+      <p style=" text-align: center; line-height: 50px;">Update
+    </div>
+
+  </form>
+  <div class="col-md-4"></div>
+</div>

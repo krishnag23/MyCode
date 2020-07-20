@@ -1,0 +1,17 @@
+.rectangle{
+    width: 280px;
+    height: 42px;
+    border-radius: 4px;
+    border: solid 1px #979797;
+    padding: 14px;
+  }
+
+  .body{
+    justify-content: center;
+  }
+  .header{
+    padding-left: 64px;padding-top: 5%;
+  }
+  .main{
+    padding-left: 40px;
+  }

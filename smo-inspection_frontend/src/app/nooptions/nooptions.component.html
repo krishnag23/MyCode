@@ -1,0 +1,36 @@
+<div>
+  <mat-form-field appearance="fill">
+    <input matInput placeholder="Unsafe act/action.." required>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <input matInput placeholder="Action required.." required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Person in charge</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let masterUserObj of masterUsers;" [value]=" masterUserObj.id">
+        {{ masterUserObj.userName}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <p>Has this issue been resolved?</p>
+  <div class="container">
+    <form appearance="fill">
+      <div>
+        <mat-radio-group>
+          <mat-radio-button value="auto">Yes</mat-radio-button>
+          <mat-radio-button value="always">No</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      </form>
+  </div>
+  <p>
+    <mat-form-field appearance="fill">
+      <mat-label>Target completion date</mat-label>
+      <input matInput [matDatepicker]="dp3" disabled>
+      <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+      <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+    </mat-form-field>
+  </p>
+</div>

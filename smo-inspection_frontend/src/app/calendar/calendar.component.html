@@ -1,0 +1,174 @@
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4 box">
+    <mat-toolbar style="height: 100px; width: 100%; padding: 40px;background-color: #d8d8d8;">
+      <div style="float: left; width:20% ;">
+        <span style="font-weight: bolder;font-size: 30px;" class="material-icons"
+          [routerLink]="['/home']">keyboard_backspace</span>
+      </div>
+      <div style="float: left; width:50% ;">
+        <p style="font-size: 15px">Hi <strong>{{ userData.name }}</strong>!<br>Level {{ level }}</p>
+      </div>
+      <div style="float: right; width:30% ;">
+        
+        <mat-icon (click)="search()">warning</mat-icon>
+
+        <mat-icon style="color: #0091ff; padding-left: 8px;" (click)="celanderView()">event_note</mat-icon>
+        <!-- <button mat-icon-button>
+          <mat-icon (click)="search()">warning</mat-icon>
+        </button>
+        <button mat-icon-button style="color: #0091ff;">
+          <mat-icon (click)="celanderView()">event_note</mat-icon>
+        </button> -->
+      </div>
+    </mat-toolbar>
+    <br>
+    <div>
+      <!-- DATA From DB-->
+      <div *ngIf="celanderFilter">
+        <div *ngFor="let record of groupedArray | keyvalue;let k=index">
+          <!-- display date -->
+          <div class="monthDisplay" *ngIf="((record.key | date: 'MMMM') == (record.key | date: 'MMMM')) ">
+            {{record.key | date: 'MMMM y' }}</div>
+          <span class="dateDisplay"><span class="material-icons online"
+              *ngIf="isCurrentDate && k==previousRecord-1">fiber_manual_record</span>{{record.key | date: 'EEEE,d' }}</span>
+          <div *ngIf="record.value.length ==2">
+            <!-- display both morning and afternnon -->
+            <div *ngIf="record.value[0].hasMorning">
+              <div class="rectangle" *ngIf="record.value[0].hasMorning" (click)="showEditView(record.value[0])"><span
+                  id="issue" class="material-icons" *ngIf="record.value[0].issueInReport">warning</span>Morning Report
+              </div>
+              <div class="rectangle" *ngIf="record.value[0].hasAfternoon" (click)="showEditView(record.value[0])"><span
+                  id="issue" class="material-icons" *ngIf="record.value[0].issueInReport">warning</span>Afternoon Report
+              </div>
+              <div class="rectangle" *ngIf="record.value[1].hasMorning" (click)="showEditView(record.value[1])"><span
+                  id="issue" class="material-icons" *ngIf="record.value[1].issueInReport">warning</span>Morning Report
+              </div>
+              <div class="rectangle" *ngIf="record.value[1].hasAfternoon" (click)="showEditView(record.value[1])"><span
+                  id="issue" class="material-icons" *ngIf="record.value[1].issueInReport">warning</span>Afternoon Report
+              </div>
+            </div>
+            <div *ngIf="record.value[0].hasAfternoon">
+              <div class="rectangle" *ngIf="record.value[1].hasMorning" (click)="showEditView(record.value[1])"><span
+                  id="issue" class="material-icons" *ngIf="record.value[1].issueInReport">warning</span>Morning Report
+              </div>
+              <div class="rectangle" *ngIf="record.value[1].hasAfternoon" (click)="showEditView(record.value[1])"><span
+                  id="issue" class="material-icons" *ngIf="record.value[1].issueInReport">warning</span>Afternoon Report
+              </div>
+              <div class="rectangle" *ngIf="record.value[0].hasMorning" (click)="showEditView(record.value[0])"><span
+                  id="issue" class="material-icons" *ngIf="record.value[0].issueInReport">warning</span>Morning Report
+              </div>
+              <div class="rectangle" *ngIf="record.value[0].hasAfternoon" (click)="showEditView(record.value[0])"><span
+                  id="issue" class="material-icons" *ngIf="record.value[0].issueInReport">warning</span>Afternoon Report
+              </div>
+            </div>
+          </div>
+          <div *ngIf="record.value.length ==1">
+            <div *ngIf="record.value[0].hasMorning">
+              <!--  Display morning as rect and afternoon as dotted -->
+              <div class="rectangle" (click)="showEditView(record.value[0])"><span id="issue" class="material-icons"
+                  *ngIf="record.value[0].issueInReport">warning</span>Morning Report</div>
+              <div class="rectangleDoted" [routerLink]="['/questions']"
+                [queryParams]="{level: level, afternoonReport: true, reportDate: record.value[0].reportingDate}">
+                Afternoon Report</div>
+            </div>
+            <div *ngIf="record.value[0].hasAfternoon">
+              <!-- display morning as dotted and afternoon as rect -->
+              <div class="rectangleDoted" [routerLink]="['/questions']"
+                [queryParams]="{level: level, morningReport: true, reportDate: record.value[0].reportingDate}">Morning
+                Report</div>
+              <div class="rectangle" (click)="showEditView(record.value[0])"><span id="issue" class="material-icons"
+                  *ngIf="record.value[0].issueInReport">warning</span>Afternoon Report</div>
+            </div>
+            <div *ngIf="!record.value[0].hasAfternoon && !record.value[0].hasMorning">
+              <div class="rectangleDoted" [routerLink]="['/questions']"
+                [queryParams]="{level: level, morningReport: true, reportDate: record.value[0].reportingDate}">Morning
+                Report</div>
+              <div class="rectangleDoted" [routerLink]="['/questions']"
+                [queryParams]="{level: level, afternoonReport: true, reportDate: record.value[0].reportingDate}">
+                Afternoon Report</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Test For Last Date To Current Date-->
+      <div *ngIf="nextDateWithData">
+      <div *ngFor="let record of lastDateToCurrentDate; let r=index">
+        <div class="day"><span class="material-icons online"
+            *ngIf="r==lastDateToCurrentDate.length-1">fiber_manual_record</span>{{record.reportingDate | date: 'EEEE,d'}}
+        </div>
+        <div class="rectangleDoted" [routerLink]="['/questions']"
+          [queryParams]="{level: level, morningReport: true, reportDate: record.reportingDate}">
+          Morning Report</div>
+        <div class="rectangleDoted" [routerLink]="['/questions']"
+          [queryParams]="{level: level, afternoonReport: true, reportDate: record.reportingDate}">
+          Afternoon Report</div>
+      </div>
+    </div>
+ 
+      <!-- Search Filter For Issue-->
+      <div *ngIf="searchFilter">
+        <div *ngFor="let record of searchFilterArray | keyvalue;let k=index">
+          <!-- display date -->          
+          <div class="monthDisplay" *ngIf="record.value[0].issueInReport || record.value[1].issueInReport">{{record.key | date: 'MMMM y' }}</div>
+          <span class="dateDisplay" *ngIf="record.value[0].issueInReport || record.value[1].issueInReport"><span class="material-icons online"
+            *ngIf="isCurrentDate && k==previousRecord-1">fiber_manual_record</span>{{record.key | date: 'EEEE,d' }}</span>
+          <div *ngIf="record.value.length == 2">
+            <!-- display both morning and afternnon -->
+            <div class="rectangle" *ngIf="record.value[0].hasMorning && record.value[0].issueInReport"
+              (click)="showEditView(record.value[0])"><span id="issue" class="material-icons">warning</span>Morning
+              Report</div>
+            <div class="rectangle" *ngIf="record.value[0].hasAfternoon && record.value[0].issueInReport"
+              (click)="showEditView(record.value[0])"><span id="issue" class="material-icons">warning</span>Afternoon
+              Report</div>
+            <div class="rectangle" *ngIf="record.value[1].hasMorning &&  record.value[1].issueInReport"
+              (click)="showEditView(record.value[1])"><span id="issue" class="material-icons">warning</span>Morning
+              Report</div>
+            <div class="rectangle" *ngIf="record.value[1].hasAfternoon && record.value[1].issueInReport"
+              (click)="showEditView(record.value[1])"><span id="issue" class="material-icons">warning</span>Afternoon
+              Report</div>
+          </div>
+          <div *ngIf="record.value.length == 1">
+            <div *ngIf="record.value[0].hasMorning">
+              <!--  Display morning as rect and afternoon as dotted -->
+              <div class="rectangle" *ngIf="record.value[0].issueInReport" (click)="showEditView(record.value[0])"><span
+                  id="issue" class="material-icons">warning</span>Morning Report</div>
+            </div>
+            <div *ngIf="record.value[0].hasAfternoon">
+              <!-- display morning as dotted and afternoon as rect -->
+              <div class="rectangle" *ngIf="record.value[0].issueInReport" (click)="showEditView(record.value[0])"><span
+                  id="issue" class="material-icons">warning</span>Afternoon Report</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Day and Next Day If empty-->
+      <div *ngIf="emptyCurrentDate">
+        <div class="calender">{{currentMonth}} {{currentYear}}</div>
+        <div class="day"><span class="material-icons online">fiber_manual_record</span>{{currentDay}},{{curentDate}}
+        </div>
+        <div class="rectangleDoted" [routerLink]="['/questions']"
+          [queryParams]="{level: level, morningReport: true,reportDate: currentFullDate}">Morning Report</div>
+        <div class="rectangleDoted" [routerLink]="['/questions']"
+          [queryParams]="{level: level, afternoonReport: true,reportDate: currentFullDate}">Afternoon Report</div>
+      </div>
+      <div *ngIf="emptyCurrentDate">
+        <div class="calender" *ngIf="showNextMonth">{{currentMonth}} {{currentYear}}</div>
+        <div class="day">{{nextDay}},{{nextDate}}</div>
+        <div class="rectangleDoted">Morning Report</div>
+        <div class="rectangleDoted">Afternoon Report</div>
+      </div>
+      <!-- Next Day If Data Is There-->
+      <div *ngIf="nextDateWithData">
+        <div class="calender" *ngIf="showNextMonth">{{currentMonth}} {{currentYear}}</div>
+        <div class="day">{{nextDay}},{{nextDate}}</div>
+        <div class="rectangleDoted">Morning Report</div>
+        <div class="rectangleDoted">Afternoon Report</div>
+      </div>
+      <!-- Scroll To Bottom-->
+      <div *ngIf="true">{{goToBottom()}}</div>
+    </div>
+    <div class="col-md-4"></div>
+  </div>

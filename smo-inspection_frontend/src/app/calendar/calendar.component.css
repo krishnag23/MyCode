@@ -1,0 +1,62 @@
+.header {
+  padding: 10px 16px;
+  background: rgb(167, 165, 165);
+
+}
+
+.rectangle {
+  width: 80%;
+  border-radius: 4px;
+  padding: 10px;
+  border: solid 1px #979797;
+  margin-bottom: 20px;
+  margin-left: 10%;
+}
+
+.monthDisplay {
+  padding: 2px;
+  margin-left: 12%;
+  font-size: medium;
+  font-weight: 900;
+}
+
+.dateDisplay {
+  margin-left: 10%;
+
+}
+
+.rectangleDoted {
+  border-radius: 4px;
+  border: solid 2px #0091ff;
+  width: 80%;
+  border-style: dashed;
+  padding: 10px;
+  margin-bottom: 20px;
+  margin-left: 10%;
+}
+
+.calender {
+  margin-left: 10%;
+  margin-top: 20px;
+  font-size: medium;
+  font-weight: 900;
+}
+
+.cal {
+  color: rgb(63, 92, 223);
+}
+
+.online {
+  color: rgb(46, 177, 253);
+  font-size: 15px;
+}
+
+.day {
+  margin-left: 10%;
+}
+
+#issue {
+  position: absolute;
+  right: 20%;
+  color: #f7b500;
+}

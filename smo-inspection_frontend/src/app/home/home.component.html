@@ -1,0 +1,18 @@
+
+<div class="row body">
+<div class="col-md-3">
+<div  class ="header">
+    <p>Hi <strong>{{ userData.name }}</strong>,<br>Which area are you covering?</p>
+</div>
+
+<div class ="main">
+  <a [routerLink]="['/calendar']" [queryParams]="{level: 27}">
+    <p class="rectangle">Level 27</p>
+  </a>
+  <a [routerLink]="['/calendar']" [queryParams]="{level: 28}">
+    <p class="rectangle">Level 28</p>
+  </a>
+</div>
+</div>
+
+</div>

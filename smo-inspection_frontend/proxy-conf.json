@@ -1,0 +1,6 @@
+{
+  "/": {
+    "target": "http://smabedev.swiredigital-s3-staging.com:9094",
+    "secure": false
+  }
+}
